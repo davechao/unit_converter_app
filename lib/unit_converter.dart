@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:unit_converter_app/category.dart';
 import 'package:unit_converter_app/unit.dart';
 
 const _padding = EdgeInsets.all(16.0);
 
 class UnitConverter extends StatefulWidget {
-  final String name;
-  final Color color;
-  final List<Unit> units;
+  final Category category;
 
   const UnitConverter({
-    @required this.name,
-    @required this.color,
-    @required this.units,
-  })  : assert(name != null),
-        assert(color != null),
-        assert(units != null);
+    @required this.category,
+  }) : assert(category != null);
 
   @override
   _UnitConverterState createState() => _UnitConverterState();
@@ -31,7 +26,7 @@ class _UnitConverterState extends State<UnitConverter> {
 
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
-    for (var unit in widget.units) {
+    for (var unit in widget.category.units) {
       newItems.add(DropdownMenuItem(
         value: unit.name,
         child: Container(
@@ -50,8 +45,8 @@ class _UnitConverterState extends State<UnitConverter> {
 
   void _setDefaults() {
     setState(() {
-      _fromValue = widget.units[0];
-      _toValue = widget.units[1];
+      _fromValue = widget.category.units[0];
+      _toValue = widget.category.units[1];
     });
   }
 
@@ -71,7 +66,7 @@ class _UnitConverterState extends State<UnitConverter> {
   }
 
   Unit _getUnit(String unitName) {
-    return widget.units.firstWhere(
+    return widget.category.units.firstWhere(
       (Unit unit) {
         return unit.name == unitName;
       },
@@ -161,6 +156,16 @@ class _UnitConverterState extends State<UnitConverter> {
     _setDefaults();
   }
 
+
+  @override
+  void didUpdateWidget(UnitConverter old) {
+    super.didUpdateWidget(old);
+    if (old.category != widget.category) {
+      _createDropdownMenuItems();
+      _setDefaults();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final input = Padding(
@@ -222,7 +227,7 @@ class _UnitConverterState extends State<UnitConverter> {
       ),
     );
 
-    final body = Column(
+    final converter = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         input,
@@ -233,7 +238,7 @@ class _UnitConverterState extends State<UnitConverter> {
 
     return Padding(
       padding: _padding,
-      child: body,
+      child: converter,
     );
   }
 }

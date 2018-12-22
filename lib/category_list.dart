@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:unit_converter_app/backdrop.dart';
 import 'package:unit_converter_app/category.dart';
+import 'package:unit_converter_app/category_tile.dart';
 import 'package:unit_converter_app/unit.dart';
-
-final _backgroundColor = Colors.green[100];
+import 'package:unit_converter_app/unit_converter.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList();
@@ -12,6 +13,11 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
+  Category _defaultCategory;
+  Category _currentCategory;
+
+  final _categories = <Category>[];
+
   static const _categoryNames = <String>[
     'Length',
     'Area',
@@ -59,7 +65,23 @@ class _CategoryListState extends State<CategoryList> {
     }),
   ];
 
-  final _categories = <Category>[];
+  void _onCategoryTap(Category category) {
+    setState(() {
+      _currentCategory = category;
+    });
+  }
+
+  Widget _buildCategoryWidgets() {
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        return CategoryTile(
+          category: _categories[index],
+          onTap: _onCategoryTap,
+        );
+      },
+      itemCount: _categories.length,
+    );
+  }
 
   List<Unit> _retrieveUnits(String categoryName) {
     return List.generate(10, (int i) {
@@ -71,63 +93,43 @@ class _CategoryListState extends State<CategoryList> {
     });
   }
 
-  Widget _buildCategoryWidgets(bool _portrait, List<Widget> _categories) {
-    if (_portrait) {
-      return ListView.builder(
-        itemBuilder: (BuildContext context, int index) => _categories[index],
-        itemCount: _categories.length,
-      );
-    } else {
-      return GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: 3.0,
-        children: _categories,
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     for (var i = 0; i < _categoryNames.length; i++) {
-      _categories.add(Category(
+      var category = Category(
         name: _categoryNames[i],
         color: _categoryColors[i],
         iconLocation: Icons.cake,
         units: _retrieveUnits(_categoryNames[i]),
-      ));
+      );
+      if (i == 0) {
+        _defaultCategory = category;
+      }
+      _categories.add(category);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      elevation: 0.0,
-      title: Text(
-        'Unit Converter',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 30.0,
-        ),
+    final listView = Padding(
+      padding: EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        bottom: 48.0,
       ),
-      centerTitle: true,
-      backgroundColor: _backgroundColor,
+      child: _buildCategoryWidgets(),
     );
 
-    final body = Container(
-      color: _backgroundColor,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: OrientationBuilder(
-        builder: (context, orientation) {
-          return _buildCategoryWidgets(
-              orientation == Orientation.portrait, _categories);
-        },
-      ),
-    );
-
-    return Scaffold(
-      appBar: appBar,
-      body: body,
+    return Backdrop(
+      currentCategory:
+          _currentCategory == null ? _defaultCategory : _currentCategory,
+      frontPanel: _currentCategory == null
+          ? UnitConverter(category: _defaultCategory)
+          : UnitConverter(category: _currentCategory),
+      backPanel: listView,
+      frontTitle: Text('Unit Converter'),
+      backTitle: Text('Select a Category'),
     );
   }
 }
