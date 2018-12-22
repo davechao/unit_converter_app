@@ -156,7 +156,6 @@ class _UnitConverterState extends State<UnitConverter> {
     _setDefaults();
   }
 
-
   @override
   void didUpdateWidget(UnitConverter old) {
     super.didUpdateWidget(old);
@@ -236,9 +235,47 @@ class _UnitConverterState extends State<UnitConverter> {
       ],
     );
 
+    // using BoxConstraints
     return Padding(
       padding: _padding,
-      child: converter,
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxHeight > constraints.maxWidth) {
+          return SingleChildScrollView(
+            child: converter,
+          );
+        } else {
+          return SingleChildScrollView(
+            child: Center(
+                child: Container(
+              width: 450.0,
+              child: converter,
+            )),
+          );
+        }
+      }),
     );
+
+    // using Orientation
+//    return Padding(
+//      padding: _padding,
+//      child: OrientationBuilder(
+//          builder: (BuildContext context, Orientation orientation) {
+//        if (orientation == Orientation.portrait) {
+//          return SingleChildScrollView(
+//            child: converter,
+//          );
+//        } else {
+//          return SingleChildScrollView(
+//            child: Center(
+//              child: Container(
+//                width: 450.0,
+//                child: converter,
+//              ),
+//            ),
+//          );
+//        }}
+//      ),
+//    );
   }
 }
