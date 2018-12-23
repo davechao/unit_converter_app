@@ -16,7 +16,6 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-
   Category _defaultCategory;
   Category _currentCategory;
 
@@ -79,9 +78,13 @@ class _CategoryListState extends State<CategoryList> {
     if (deviceOrientation == Orientation.portrait) {
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
+          var _category = _categories[index];
           return CategoryItem(
-            category: _categories[index],
-            onTap: _onCategoryTap,
+            category: _category,
+            onTap:
+                _category.name == apiCategory['name'] && _category.units.isEmpty
+                    ? null
+                    : _onCategoryTap,
           );
         },
         itemCount: _categories.length,
@@ -93,7 +96,9 @@ class _CategoryListState extends State<CategoryList> {
         children: _categories.map((Category c) {
           return CategoryItem(
             category: c,
-            onTap: _onCategoryTap,
+            onTap: c.name == apiCategory['name'] && c.units.isEmpty
+                ? null
+                : _onCategoryTap,
           );
         }).toList(),
       );
