@@ -235,47 +235,49 @@ class _UnitConverterState extends State<UnitConverter> {
       ],
     );
 
-    // using BoxConstraints
+    // using Orientation
     return Padding(
       padding: _padding,
-      child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxHeight > constraints.maxWidth) {
+      child: OrientationBuilder(
+          builder: (BuildContext context, Orientation orientation) {
+        if (orientation == Orientation.portrait) {
           return SingleChildScrollView(
             child: converter,
           );
         } else {
           return SingleChildScrollView(
             child: Center(
-                child: Container(
-              width: 450.0,
-              child: converter,
-            )),
+              child: Container(
+                width: 450.0,
+                child: converter,
+              ),
+            ),
           );
-        }
-      }),
+        }}
+      ),
     );
 
-    // using Orientation
+
+    // using BoxConstraints
 //    return Padding(
 //      padding: _padding,
-//      child: OrientationBuilder(
-//          builder: (BuildContext context, Orientation orientation) {
-//        if (orientation == Orientation.portrait) {
+//      child: LayoutBuilder(
+//          builder: (BuildContext context, BoxConstraints constraints) {
+//        if (constraints.maxHeight > constraints.maxWidth) {
 //          return SingleChildScrollView(
 //            child: converter,
 //          );
 //        } else {
 //          return SingleChildScrollView(
 //            child: Center(
-//              child: Container(
-//                width: 450.0,
-//                child: converter,
-//              ),
-//            ),
+//                child: Container(
+//              width: 450.0,
+//              child: converter,
+//            )),
 //          );
-//        }}
-//      ),
+//        }
+//      }),
 //    );
+
   }
 }
