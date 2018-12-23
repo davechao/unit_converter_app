@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:unit_converter_app/backdrop.dart';
 import 'package:unit_converter_app/category.dart';
-import 'package:unit_converter_app/category_tile.dart';
+import 'package:unit_converter_app/category_item.dart';
 import 'package:unit_converter_app/unit.dart';
 import 'package:unit_converter_app/unit_converter.dart';
 
@@ -29,6 +29,17 @@ class _CategoryListState extends State<CategoryList> {
     'Digital Storage',
     'Energy',
     'Currency',
+  ];
+
+  static const _icons = <String>[
+    'assets/icons/length.png',
+    'assets/icons/area.png',
+    'assets/icons/volume.png',
+    'assets/icons/mass.png',
+    'assets/icons/time.png',
+    'assets/icons/digital_storage.png',
+    'assets/icons/power.png',
+    'assets/icons/currency.png',
   ];
 
   static const _categoryColors = <ColorSwatch>[
@@ -77,7 +88,7 @@ class _CategoryListState extends State<CategoryList> {
     if (deviceOrientation == Orientation.portrait) {
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return CategoryTile(
+          return CategoryItem(
             category: _categories[index],
             onTap: _onCategoryTap,
           );
@@ -89,7 +100,7 @@ class _CategoryListState extends State<CategoryList> {
         crossAxisCount: 2,
         childAspectRatio: 3.0,
         children: _categories.map((Category c) {
-          return CategoryTile(
+          return CategoryItem(
             category: c,
             onTap: _onCategoryTap,
           );
@@ -113,7 +124,7 @@ class _CategoryListState extends State<CategoryList> {
         name: key,
         units: units,
         color: _categoryColors[categoryIndex],
-        iconLocation: Icons.cake,
+        iconLocation: _icons[categoryIndex],
       );
       setState(() {
         if (categoryIndex == 0) {

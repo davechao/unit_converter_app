@@ -5,11 +5,11 @@ import 'package:unit_converter_app/category.dart';
 const _rowHeight = 100.0;
 final _borderRadius = BorderRadius.circular(_rowHeight / 2);
 
-class CategoryTile extends StatelessWidget {
+class CategoryItem extends StatelessWidget {
   final Category category;
   final ValueChanged<Category> onTap;
 
-  const CategoryTile({
+  const CategoryItem({
     Key key,
     @required this.category,
     @required this.onTap,
@@ -35,10 +35,7 @@ class CategoryTile extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Icon(
-                    category.iconLocation,
-                    size: 60.0,
-                  ),
+                  child: Image.asset(category.iconLocation),
                 ),
                 Center(
                   child: Text(
