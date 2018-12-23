@@ -12,6 +12,7 @@ class CategoryApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Unit Converter App',
       theme: ThemeData(
+        fontFamily: 'Raleway',
         textTheme: Theme.of(context).textTheme.apply(
               bodyColor: Colors.black,
               displayColor: Colors.grey[600],

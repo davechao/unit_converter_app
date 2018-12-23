@@ -164,7 +164,12 @@ class _CategoryListState extends State<CategoryList> {
           : UnitConverter(category: _currentCategory),
       backPanel: listView,
       frontTitle: Text('Unit Converter'),
-      backTitle: Text('Select a Category'),
+      backTitle: Text(
+        'Select a Category',
+        style: TextStyle(
+          fontFamily: 'Raleway',
+        ),
+      ),
     );
   }
 }
