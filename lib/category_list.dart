@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:unit_converter_app/api.dart';
 import 'package:unit_converter_app/backdrop.dart';
 import 'package:unit_converter_app/category.dart';
 import 'package:unit_converter_app/category_item.dart';
@@ -15,21 +16,11 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
+
   Category _defaultCategory;
   Category _currentCategory;
 
   final _categories = <Category>[];
-
-  static const _categoryNames = <String>[
-    'Length',
-    'Area',
-    'Volume',
-    'Mass',
-    'Time',
-    'Digital Storage',
-    'Energy',
-    'Currency',
-  ];
 
   static const _icons = <String>[
     'assets/icons/length.png',
@@ -136,11 +127,40 @@ class _CategoryListState extends State<CategoryList> {
     });
   }
 
+  Future<void> _retrieveApiCategory() async {
+    setState(() {
+      _categories.add(Category(
+        name: apiCategory['name'],
+        units: [],
+        color: _categoryColors.last,
+        iconLocation: _icons.last,
+      ));
+    });
+    final api = Api();
+    final jsonUnits = await api.getUnits(apiCategory['category']);
+    if (jsonUnits != null) {
+      final units = <Unit>[];
+      for (var unit in jsonUnits) {
+        units.add(Unit.fromJson(unit));
+      }
+      setState(() {
+        _categories.removeLast();
+        _categories.add(Category(
+          name: apiCategory['name'],
+          units: units,
+          color: _categoryColors.last,
+          iconLocation: _icons.last,
+        ));
+      });
+    }
+  }
+
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (_categories.isEmpty) {
       await _retrieveLocalCategories();
+      await _retrieveApiCategory();
     }
   }
 

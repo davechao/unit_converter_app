@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:unit_converter_app/api.dart';
 import 'package:unit_converter_app/category.dart';
 import 'package:unit_converter_app/unit.dart';
 
@@ -92,11 +93,20 @@ class _UnitConverterState extends State<UnitConverter> {
     });
   }
 
-  void _updateConvertValue() {
-    setState(() {
-      _convertedValue =
-          _format(_inputValue * (_toValue.conversion / _fromValue.conversion));
-    });
+  Future<void> _updateConvertValue() async {
+    if (widget.category.name == apiCategory['name']) {
+      final api = Api();
+      final conversion = await api.convert(apiCategory['category'],
+          _inputValue.toString(), _fromValue.name, _toValue.name);
+      setState(() {
+        _convertedValue = _format(conversion);
+      });
+    } else {
+      setState(() {
+        _convertedValue = _format(
+            _inputValue * (_toValue.conversion / _fromValue.conversion));
+      });
+    }
   }
 
   void _updateFromConversion(dynamic unitName) {
@@ -253,10 +263,9 @@ class _UnitConverterState extends State<UnitConverter> {
               ),
             ),
           );
-        }}
-      ),
+        }
+      }),
     );
-
 
     // using BoxConstraints
 //    return Padding(
@@ -278,6 +287,5 @@ class _UnitConverterState extends State<UnitConverter> {
 //        }
 //      }),
 //    );
-
   }
 }
